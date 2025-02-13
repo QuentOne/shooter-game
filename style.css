@@ -3,12 +3,12 @@ body, html {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background: #222;
+    background: #ffe4e4;
 }
 
 #gameCanvas {
     display: block;
-    background: #333;
+    background: #ffecec;
     margin: 0 auto;
 }
 
