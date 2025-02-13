@@ -2,9 +2,8 @@ from flask import Flask, send_from_directory, request
 from flask_socketio import SocketIO, emit
 import time
 
-app = Flask(__name__, static_url_path='', static_folder='static')
-app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Dictionary to hold player data. Each player gets a sequential number.
 players = {}
@@ -93,4 +92,7 @@ def on_restart_game():
     emit('gameRestarted', players, broadcast=True)
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5001)
+    # Change "127.0.0.1" to "0.0.0.0" to allow external connections
+    host_ip = "0.0.0.0"  # This allows connections from other devices
+    port = 5001  # Choose any port
+    socketio.run(app, host=host_ip, port=port)
