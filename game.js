@@ -5,7 +5,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 // Connect to the server
-var socket = io("http://10.222.10.11:5001");
+var socket = io("http://129.104.65.9:5001");
 
 // Game state objects
 var players = {};
