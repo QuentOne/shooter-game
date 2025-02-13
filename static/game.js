@@ -5,7 +5,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 // Connect to the server
-var socket = io("https://your-flask-app.herokuapp.com");
+var socket = io("https://shooter-server.quentone.repl.co");
 
 // Game state objects
 var players = {};
