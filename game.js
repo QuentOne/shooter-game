@@ -158,71 +158,45 @@ function update() {
 // Draw game elements
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw players
+
+    // 🔹 Draw players
     for (var id in players) {
         var p = players[id];
-        if (!p.alive) continue; // Skip dead players
-        
-        // Set color based on upgrade level
-        var baseColor = 'grey';
-        if (p.upgrade === 1) baseColor = 'red';
-        else if (p.upgrade === 2) baseColor = 'blue';
-        else if (p.upgrade === 3) baseColor = 'green';
-        else if (p.upgrade === 4) baseColor = 'gold';
-        else if (p.upgrade >= 5) baseColor = 'black';
-        
+        if (!p.alive) continue;
+
+        // Set player color based on upgrade level
+        var baseColor = ['grey', 'red', 'blue', 'green', 'gold', 'black'][p.upgrade] || 'grey';
+
         ctx.fillStyle = baseColor;
         ctx.beginPath();
         ctx.arc(p.x, p.y, 20, 0, 2 * Math.PI);
         ctx.fill();
-        
+
         // Draw player number
         ctx.fillStyle = '#fff';
         ctx.font = '14px Arial';
         ctx.textAlign = 'center';
         ctx.fillText(p.number, p.x, p.y + 5);
-        
-        // Draw health bar above player
+
+        // 🔹 Draw health bar above player
         ctx.fillStyle = 'red';
         ctx.fillRect(p.x - 20, p.y - 30, 40, 5);
         ctx.fillStyle = 'green';
         var healthWidth = Math.max(0, 40 * (p.health / 100));
         ctx.fillRect(p.x - 20, p.y - 30, healthWidth, 5);
-        
-        // Draw blocking indicator if active
-        if (p.block) {
-            ctx.strokeStyle = '#ff0';
-            ctx.lineWidth = 5;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, 25, 0, 2 * Math.PI);
-            ctx.stroke();
-        }
     }
-    
-    // Draw bullets
+
+    // 🔹 Draw bullets
     ctx.fillStyle = '#fff';
     bullets.forEach(function(b) {
         ctx.beginPath();
         ctx.arc(b.x, b.y, 5, 0, 2 * Math.PI);
         ctx.fill();
     });
-    
-    // Draw health bars for all players on bottom left
-    var index = 0;
-    for (var id in players) {
-        var p = players[id];
-        ctx.fillStyle = '#555';
-        ctx.fillRect(10, canvas.height - 30 - index * 30, 100, 20);
-        ctx.fillStyle = 'green';
-        ctx.fillRect(10, canvas.height - 30 - index * 30, 100 * (p.health / 100), 20);
-        ctx.fillStyle = '#fff';
-        ctx.font = '14px Arial';
-        ctx.textAlign = 'left';
-        ctx.fillText("Player " + p.number, 120, canvas.height - 15 - index * 30);
-        index++;
-    }
+
+    requestAnimationFrame(draw);
 }
+
 
 function gameLoop() {
     if (localPlayer.alive) {
@@ -239,6 +213,11 @@ socket.on('currentPlayers', function(serverPlayers) {
         localPlayer = players[localPlayerId];
     }
 });
+socket.on('currentPlayers', function(serverPlayers) {
+    console.log("Received player data:", serverPlayers);
+    players = serverPlayers;
+});
+
 socket.on('playerMoved', function(data) {
     if (!players[data.id]) players[data.id] = {};
     players[data.id].x = data.x;

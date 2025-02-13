@@ -13,12 +13,10 @@ player_count = 0
 def index():
     return send_from_directory('static', 'index.html')
 
-@socketio.on('connect')
 def on_connect():
     global player_count
-    print('Client connected:', request.sid)
+    print(f'Client connected: {request.sid}')
     player_count += 1
-    # Initialize player with starting position, health, alive state, etc.
     players[request.sid] = {
         'x': 100,
         'y': 100,
@@ -26,9 +24,10 @@ def on_connect():
         'lastShot': 0,
         'health': 100,
         'alive': True,
-        'number': player_count,  # player number shown on-screen
-        'upgrade': 0           # weapon upgrade level (0 = basic)
+        'number': player_count,
+        'upgrade': 0
     }
+    print("Sending player data:", players)
     emit('currentPlayers', players, broadcast=True)
 
 @socketio.on('disconnect')
@@ -90,6 +89,8 @@ def on_restart_game():
         players[pid]['y'] = 100
         # Optionally reset upgrades here if needed
     emit('gameRestarted', players, broadcast=True)
+
+
 
 if __name__ == '__main__':
     # Change "127.0.0.1" to "0.0.0.0" to allow external connections
