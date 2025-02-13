@@ -5,7 +5,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 // Connect to the server
-var socket = io("https://shooter-server.quentone.repl.co");
+var socket = io("http://10.222.10.11:5001");
 
 // Game state objects
 var players = {};
